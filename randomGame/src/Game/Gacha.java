@@ -4,12 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Gacha extends JFrame {
@@ -25,7 +27,7 @@ public class Gacha extends JFrame {
 		setTitle("뽑기");
 		setSize(500, 300);
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
 		// 소지금 라벨 상단 우측에 배치
@@ -48,54 +50,76 @@ public class Gacha extends JFrame {
 		oneTimeButton.addActionListener(e -> oneGacha(userInfo));
 		fiveTimesButton.addActionListener(e -> fiveGacha());
 
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
-	public void oneGacha(UserInfo userInfo) {
-		PokeInfo selectedPoke = gachaDao.oneGach(userInfo);
-
-		// 결과 패널 초기화
-		resultPanel.removeAll();
+	private void addPokeToResultPanel(PokeInfo selectedPoke) {
 		if (selectedPoke != null) {
-			// 포켓몬 이미지와 이름 표시
 			int pokenum = selectedPoke.getPokenum();
-			String imagePath = "/Game/imges/" + pokenum + ".png"; // 이미지 경로 생성
+			String imagePath = "/Game/imges/" + pokenum + ".png";
 			ImageIcon icon = new ImageIcon(getClass().getResource(imagePath));
-			Image image = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 이미지 크기 조절
+			Image image = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 
-			// 포켓몬 이름과 이미지를 표시할 패널 생성
 			JPanel pokePanel = new JPanel();
-			pokePanel.setLayout(new BoxLayout(pokePanel, BoxLayout.Y_AXIS)); // 수직 방향으로 배치
+			pokePanel.setLayout(new BoxLayout(pokePanel, BoxLayout.Y_AXIS));
 
-			// 이미지 추가
 			JLabel pokeImageLabel = new JLabel(new ImageIcon(image));
-			pokeImageLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT); // 중앙 정렬
-			pokePanel.add(pokeImageLabel); // 이미지 추가
+			pokeImageLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+			pokePanel.add(pokeImageLabel);
 
-			// 포켓몬 이름 추가
 			JLabel pokeNameLabel = new JLabel(selectedPoke.getName(), JLabel.CENTER);
-			pokeNameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT); // 중앙 정렬
-			pokePanel.add(pokeNameLabel); // 이름 추가
+			pokeNameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+			pokePanel.add(pokeNameLabel);
 
-			// 패널의 크기를 조정하여 간격 조절
-			pokePanel.setPreferredSize(new Dimension(100, 120)); // 적절한 높이로 조정
+			pokePanel.setPreferredSize(new Dimension(100, 120));
 
-			resultPanel.add(pokePanel); // 결과 패널에 추가
+			// Add double-click listener to open popup
+			pokePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+				public void mouseClicked(java.awt.event.MouseEvent evt) {
+					if (evt.getClickCount() == 2) {
+						new PokeInfoPopup(selectedPoke);
+					}
+				}
+			});
+
+			resultPanel.add(pokePanel);
 		} else {
-			// 포켓몬이 선택되지 않았을 경우 메시지 표시
 			resultPanel.add(new JLabel("포켓몬을 찾을 수 없습니다."));
 		}
-		resultPanel.revalidate(); // 결과 패널 업데이트
-		resultPanel.repaint(); // 패널 재페인팅
+	}
+
+	public void oneGacha(UserInfo userInfo) {
+	    resultPanel.removeAll();
+
+	    List<PokeInfo> pokeList = gachaDao.gacha(userInfo, 1, 200);
+	    for (PokeInfo poke : pokeList) {
+	        addPokeToResultPanel(poke);
+	        // PokeEncyclopedia_dto에 데이터 저장
+	        gachaDao.saveToEncyclopedia(userInfo.getUserNum(), poke.getPokenum());
+	    }
+
+	    moneyLabel.setText("소지금: " + userInfo.getMoney());
+	    resultPanel.revalidate();
+	    resultPanel.repaint();
 	}
 
 	public void fiveGacha() {
-		// 5회 뽑기 로직 구현
+	    resultPanel.removeAll();
+
+	    List<PokeInfo> pokeList = gachaDao.gacha(userInfo, 5, 1000);
+	    for (PokeInfo poke : pokeList) {
+	        addPokeToResultPanel(poke);
+	        // PokeEncyclopedia_dto에 데이터 저장
+	        gachaDao.saveToEncyclopedia(userInfo.getUserNum(), poke.getPokenum());
+	    }
+
+	    moneyLabel.setText("소지금: " + userInfo.getMoney());
+	    resultPanel.revalidate();
+	    resultPanel.repaint();
 	}
 
 	public static void main(String[] args) {
-		// 예제 사용 시, UserInfo 객체를 생성하여 Gacha 창을 보여줄 수 있습니다.
-		// UserInfo userInfo = new UserInfo(...); // 사용자 정보 생성
-		// new Gacha(userInfo);
+
 	}
 }

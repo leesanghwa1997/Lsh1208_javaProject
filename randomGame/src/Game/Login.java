@@ -22,7 +22,7 @@ public class Login extends JFrame {
         setTitle("로그인");
         setSize(300, 200);
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel inputJPanel = new JPanel();

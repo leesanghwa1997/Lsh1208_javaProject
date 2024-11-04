@@ -87,10 +87,11 @@ public class Main extends JFrame {
 
 		JLabel imageLabel = new JLabel();
 		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Game/imges/egg.png"));
-		Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image image = imageIcon.getImage().getScaledInstance(150, 180, Image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(image));
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
+		imageLabel.setBorder(new EmptyBorder(20, 0, 10, 0));
+		
 		JPanel imagePanel = new JPanel();
 		imagePanel.add(imageLabel);
 
@@ -110,9 +111,9 @@ public class Main extends JFrame {
 		Infobtn.setBackground(Color.LIGHT_GRAY);
 		inputJPanel.add(Infobtn);
 
-		JButton exitbtn = new RoundedButton("종료");
-		exitbtn.setBackground(Color.LIGHT_GRAY);
-		inputJPanel.add(exitbtn);
+//		JButton exitbtn = new RoundedButton("종료");
+//		exitbtn.setBackground(Color.LIGHT_GRAY);
+//		inputJPanel.add(exitbtn);
 
 		add(imageLabel, BorderLayout.NORTH);
 		add(inputJPanel, BorderLayout.CENTER);
@@ -120,7 +121,7 @@ public class Main extends JFrame {
 		loginbtn.addActionListener(e -> login());
 		Gachabtn.addActionListener(e -> gacha(currentUser));
 		Infobtn.addActionListener(e -> Info());
-		exitbtn.addActionListener(e -> exit());
+//		exitbtn.addActionListener(e -> exit());
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -164,8 +165,13 @@ public class Main extends JFrame {
 	}
 
 	public void Info() {
-
+	    if (!loggedIn) {
+	        JOptionPane.showMessageDialog(this, "로그인 후 사용가능합니다.");
+	    } else {
+	        new PokeEncyclopedia(currentUser);
+	    }
 	}
+
 
 	public void exit() {
 
