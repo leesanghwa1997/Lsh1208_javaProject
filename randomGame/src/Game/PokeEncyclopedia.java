@@ -18,7 +18,8 @@ public class PokeEncyclopedia extends JFrame {
         this.dao = new PokeEncyclopedia_dao();
 
         setTitle("도감");
-        setSize(800, 800); // Increased frame size for larger grid
+        setSize(800, 800); 
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -102,14 +103,16 @@ public class PokeEncyclopedia extends JFrame {
             gbc.gridy = 1; // 이름 행으로 이동
             pokePanel.add(new JLabel(nameLabel, SwingConstants.CENTER), gbc); // 이름 중앙 정렬
 
-            // 패널 클릭 시 포켓몬 정보 팝업 띄우기
-            pokePanel.addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (evt.getClickCount() == 2) {
-                        new PokeInfoPopup(poke); // 팝업 띄우기
+            // 패널 클릭 시 포켓몬 정보 팝업 띄우기 (poke가 null이 아닐 때만)
+            if (poke != null) {
+                pokePanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        if (evt.getClickCount() == 2) {
+                            new PokeInfoPopup(poke); // 팝업 띄우기
+                        }
                     }
-                }
-            });
+                });
+            }
 
             gridPanel.add(pokePanel);
         }
@@ -129,6 +132,7 @@ public class PokeEncyclopedia extends JFrame {
         prevButton.setEnabled(true);
         nextButton.setEnabled(true);
     }
+
 
     // 이미지 리사이즈 메서드
     private Image resizeImage(String path, int width, int height) {

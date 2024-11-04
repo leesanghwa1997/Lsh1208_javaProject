@@ -75,7 +75,7 @@ public class Login extends JFrame {
     
 
     private void handleSignup() {
-        System.out.println("가입 버튼 클릭");
-        // 가입 로직을 추가합니다.
+        new SignUp();
     }
+
 }

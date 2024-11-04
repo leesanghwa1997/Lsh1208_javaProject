@@ -77,27 +77,30 @@ class RoundedButton extends JButton {
 public class Main extends JFrame {
 	private boolean loggedIn = false;
 	private UserInfo currentUser;
+	private Image backgroundImage;
 
 	public Main() {
-		setTitle("메인");
+		setTitle("랜덤 뽑기");
 		setSize(400, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		setResizable(false);
 
+		backgroundImage = new ImageIcon(getClass().getResource("/Game/imges/mainBackgroundImg.jpg")).getImage();
+
 		JLabel imageLabel = new JLabel();
-		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Game/imges/egg.png"));
+		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Game/imges/main.png"));
 		Image image = imageIcon.getImage().getScaledInstance(150, 180, Image.SCALE_SMOOTH);
 		imageLabel.setIcon(new ImageIcon(image));
 		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		imageLabel.setBorder(new EmptyBorder(20, 0, 10, 0));
-		
+		imageLabel.setBorder(new EmptyBorder(40, 0, 10, 0));
+
 		JPanel imagePanel = new JPanel();
 		imagePanel.add(imageLabel);
 
 		JPanel inputJPanel = new JPanel();
 		inputJPanel.setLayout(new GridLayout(4, 1, 0, 10));
-		inputJPanel.setBorder(new EmptyBorder(50, 100, 20, 100));
+		inputJPanel.setBorder(new EmptyBorder(20, 100, 20, 100));
 
 		JButton loginbtn = new RoundedButton("로그인");
 		loginbtn.setBackground(Color.LIGHT_GRAY);
@@ -111,17 +114,12 @@ public class Main extends JFrame {
 		Infobtn.setBackground(Color.LIGHT_GRAY);
 		inputJPanel.add(Infobtn);
 
-//		JButton exitbtn = new RoundedButton("종료");
-//		exitbtn.setBackground(Color.LIGHT_GRAY);
-//		inputJPanel.add(exitbtn);
-
 		add(imageLabel, BorderLayout.NORTH);
 		add(inputJPanel, BorderLayout.CENTER);
 
 		loginbtn.addActionListener(e -> login());
 		Gachabtn.addActionListener(e -> gacha(currentUser));
 		Infobtn.addActionListener(e -> Info());
-//		exitbtn.addActionListener(e -> exit());
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -131,17 +129,13 @@ public class Main extends JFrame {
 		if (!loggedIn) {
 			new Login(this);
 		} else {
-			// 로그아웃 확인 대화상자
 			int result = JOptionPane.showConfirmDialog(null, "로그아웃 하시겠습니까?", "로그아웃 확인", JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
-
-			// 사용자가 "확인"을 클릭했을 경우
 			if (result == JOptionPane.YES_OPTION) {
 				loggedIn = false;
 				currentUser = null;
 				((JButton) ((JPanel) getContentPane().getComponent(1)).getComponent(0)).setText("로그인");
 			}
-			// 사용자가 "아니오"를 클릭했을 경우, 아무 작업도 하지 않음
 		}
 	}
 
@@ -165,20 +159,14 @@ public class Main extends JFrame {
 	}
 
 	public void Info() {
-	    if (!loggedIn) {
-	        JOptionPane.showMessageDialog(this, "로그인 후 사용가능합니다.");
-	    } else {
-	        new PokeEncyclopedia(currentUser);
-	    }
-	}
-
-
-	public void exit() {
-
+		if (!loggedIn) {
+			JOptionPane.showMessageDialog(this, "로그인 후 사용가능합니다.");
+		} else {
+			new PokeEncyclopedia(currentUser);
+		}
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new Main();
 	}
 }

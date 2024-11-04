@@ -50,20 +50,21 @@ public class PokeInfoPopup extends JFrame {
         // Define rank colors
         rankColors.put("SS", new Color(0xff6c00));
         rankColors.put("S", new Color(0xe4b432));
-        rankColors.put("A", new Color(0x9410be)); // Purple
+        rankColors.put("A", new Color(0x9410be));
         rankColors.put("B", new Color(0x4b97ff));
-        rankColors.put("C", new Color(0x5dff70));
+        rankColors.put("C", new Color(0x00c73c));
     }
 
     public PokeInfoPopup(PokeInfo pokeInfo) {
         this.pokeInfo = pokeInfo;
-        setTitle(pokeInfo.getName() + " Details");
+        setTitle(pokeInfo.getName());
         setSize(300, 400);
+        setResizable(false);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         Font font = new Font("맑은 고딕", Font.PLAIN, 16);
-        Font rankFont = font.deriveFont(Font.BOLD, 30); // Increased font size for rank
+        Font rankFont = font.deriveFont(Font.BOLD, 45); // Increased font size for rank
 
         // Central alignment panel
         JPanel mainPanel = new JPanel();
@@ -109,7 +110,13 @@ public class PokeInfoPopup extends JFrame {
         rankLabel.setHorizontalAlignment(JLabel.CENTER);
         rankLabel.setPreferredSize(new Dimension(100, 40));
         rankLabel.setBorder(null); // Remove the border around the rank label
-        mainPanel.add(rankLabel);
+
+        // Create a new panel to hold the rank label
+        JPanel rankPanel = new JPanel();
+        rankPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center alignment
+        rankPanel.add(rankLabel); // Add rank label to the panel
+
+        mainPanel.add(rankPanel); // Add the rank panel to the main panel
 
         add(mainPanel);
 
@@ -130,6 +137,3 @@ public class PokeInfoPopup extends JFrame {
         parent.add(typeLabel);
     }
 }
-
-
-
