@@ -26,25 +26,23 @@ class RoundedButton extends JButton {
 
 	public RoundedButton(String text) {
 		super(text);
-		setContentAreaFilled(false); // 배경 채우기 비활성화
-		setFocusPainted(false); // 클릭 시 외곽선 제거
-		setBorder(new EmptyBorder(10, 10, 10, 10)); // 패딩 추가
+		setContentAreaFilled(false);
+		setFocusPainted(false);
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 
-		// 기본 색상 및 호버 색상 설정
 		originalColor = Color.LIGHT_GRAY;
 		hoverColor = Color.GRAY;
 		setBackground(originalColor);
 
-		// 마우스 이벤트 추가
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				setBackground(hoverColor); // 마우스가 올라갔을 때 색 변경
+				setBackground(hoverColor);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				setBackground(originalColor); // 마우스가 떠나면 원래 색으로 복귀
+				setBackground(originalColor);
 			}
 		});
 	}
@@ -52,11 +50,10 @@ class RoundedButton extends JButton {
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g.create();
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // 안티앨리어싱 활성화
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// 버튼 배경 색상 설정
 		g2.setColor(getBackground());
-		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); // 둥근 모서리 그리기
+		g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
 
 		super.paintComponent(g);
 		g2.dispose();
@@ -67,9 +64,8 @@ class RoundedButton extends JButton {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// 버튼 테두리 색상 설정
 		g2.setColor(getForeground());
-		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30); // 둥근 모서리 테두리
+		g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
 		g2.dispose();
 	}
 }
@@ -85,8 +81,6 @@ public class Main extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		setResizable(false);
-
-		backgroundImage = new ImageIcon(getClass().getResource("/Game/imges/mainBackgroundImg.jpg")).getImage();
 
 		JLabel imageLabel = new JLabel();
 		ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Game/imges/main.png"));

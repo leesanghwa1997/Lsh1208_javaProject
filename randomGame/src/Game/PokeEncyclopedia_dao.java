@@ -22,31 +22,31 @@ public class PokeEncyclopedia_dao {
 		return DriverManager.getConnection(url, userid, passwd);
 	}
 
+	//포켓몬 정보 검색
 	public PokeInfo getPokemonByPokenum(int usernum, int pokenum) {
-	    PokeInfo pokeInfo = null;
-	    String sql = "SELECT b.pokenum, b.name, b.type1, b.type2, b.rank " + // Include rank
-	                 "FROM userinfo a, pokeinfo b, encyclopedia c " +
-	                 "WHERE c.usernum = ? AND b.pokenum = c.pokenum AND b.pokenum = ?";
-	    try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	        pstmt.setInt(1, usernum);
-	        pstmt.setInt(2, pokenum);
-	        try (ResultSet rs = pstmt.executeQuery()) {
-	            if (rs.next()) {
-	                pokeInfo = new PokeInfo(rs.getInt("pokenum"), rs.getString("name"), 
-	                                        rs.getString("type1"), rs.getString("type2"),
-	                                        rs.getString("rank"), ""); // Pass rank
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return pokeInfo;
+		PokeInfo pokeInfo = null;
+		String sql = "SELECT b.pokenum, b.name, b.type1, b.type2, b.rank "
+				+ "FROM userinfo a, pokeinfo b, encyclopedia c "
+				+ "WHERE c.usernum = ? AND b.pokenum = c.pokenum AND b.pokenum = ?";
+		try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, usernum);
+			pstmt.setInt(2, pokenum);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					pokeInfo = new PokeInfo(rs.getInt("pokenum"), rs.getString("name"), rs.getString("type1"),
+							rs.getString("type2"), rs.getString("rank"), "");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pokeInfo;
 	}
 
-
+	//도감 페이지 검색
 	public List<PokeInfo> getPokemons(int usernum, int page) {
 		List<PokeInfo> pokemons = new ArrayList<>();
-		int offset = (page - 1) * 16; // Calculate the offset for pagination
+		int offset = (page - 1) * 16;
 
 		String sql = "SELECT * FROM ( " + "SELECT b.pokenum, b.name, b.type1, b.type2, " + "ROWNUM AS rn "
 				+ "FROM userinfo a, pokeinfo b, encyclopedia c " + "WHERE c.usernum = ? AND a.usernum = c.usernum "
@@ -55,8 +55,8 @@ public class PokeEncyclopedia_dao {
 		try (Connection conn = DriverManager.getConnection(url, userid, passwd);
 				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setInt(1, usernum);
-			pstmt.setInt(2, offset); // RNUM > offset
-			pstmt.setInt(3, offset + 16); // RNUM <= offset + 16
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, offset + 16);
 
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -72,6 +72,7 @@ public class PokeEncyclopedia_dao {
 		return pokemons;
 	}
 
+	//
 	public int getTotalPages(int usernum) {
 		int totalPokemons = 0;
 
@@ -89,6 +90,6 @@ public class PokeEncyclopedia_dao {
 			e.printStackTrace();
 		}
 
-		return (int) Math.ceil(totalPokemons / 16.0); // Calculate total pages
+		return (int) Math.ceil(totalPokemons / 16.0);
 	}
 }

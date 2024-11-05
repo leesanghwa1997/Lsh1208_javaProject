@@ -30,17 +30,16 @@ public class UserInfo_dao {
 
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				// 쿼리 결과를 바탕으로 UserInfo 객체 생성
-				int userNum = rs.getInt("usernum"); // 데이터베이스에서 사용자 번호 가져오기
-				String name = rs.getString("name"); // 이름 가져오기
-				int money = rs.getInt("money"); // 잔액 가져오기
+				int userNum = rs.getInt("usernum");
+				String name = rs.getString("name");
+				int money = rs.getInt("money");
 
 				userInfo = new UserInfo(userNum, userId, password, name, money);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return userInfo; // 로그인 성공 시 UserInfo 객체 반환
+		return userInfo;
 	}
 
 	public boolean addUser(UserInfo user) {

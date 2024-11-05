@@ -24,7 +24,6 @@ public class SignUp extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Input fields panel
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(3, 2, 10, 10));
 
@@ -42,10 +41,9 @@ public class SignUp extends JFrame {
 
         add(inputPanel, BorderLayout.CENTER);
 
-        // Centered button panel
         JPanel buttonPanel = new JPanel();
         JButton registerButton = new JButton("가입");
-        buttonPanel.add(registerButton); // Center-align button
+        buttonPanel.add(registerButton); 
         add(buttonPanel, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> handleSignUp());
@@ -63,7 +61,7 @@ public class SignUp extends JFrame {
             boolean success = dao.addUser(newUser);
             if (success) {
                 JOptionPane.showMessageDialog(this, "회원가입 성공!");
-                dispose(); // Close the sign-up window
+                dispose(); 
             } else {
                 JOptionPane.showMessageDialog(this, "회원가입 실패. 다시 시도해 주세요.");
             }
